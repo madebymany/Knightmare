@@ -1,0 +1,32 @@
+<link rel='stylesheet' href='/stylesheets/desktop.css' />
+
+<div id="container"></div>
+<div class="messagebox-holder">
+  <div id="messageBox" contenteditable="true"></div>
+  <a href="#">Send message</a>
+</div>
+
+<div id="contentDom">
+  <a href="#" onclick="infoOff();" class="close">Close</a>
+  <h1 id="contentTitle"></h1>
+  <div id="contentDetails"></div>
+</div>
+
+<span class="crosshair">+</span>
+
+<script type="text/javascript" src="/javascripts/Three.js"></script>
+<script type="text/javascript" src="/javascripts/RequestAnimationFrame.js"></script>
+
+<script src="/javascripts/ShaderExtras.js"></script>
+
+<script src="/javascripts/postprocessing/EffectComposer.js"></script>
+<script src="/javascripts/postprocessing/ShaderPass.js"></script>
+<script src="/javascripts/postprocessing/MaskPass.js"></script>
+<script src="/javascripts/postprocessing/RenderPass.js"></script>
+<script src="/javascripts/postprocessing/FilmPass.js"></script>
+
+<script type="text/javascript" src="/javascripts/boids.js"></script>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/javascripts/stats.js"></script>
+<script type="text/javascript" src="/javascripts/index.js"></script>
