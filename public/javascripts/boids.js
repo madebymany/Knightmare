@@ -1,10 +1,16 @@
 // Based on http://www.openprocessing.org/visuals/?visualID=6910
 
+var MARGIN = 0;
+    SCREEN_HEIGHT = window.innerHeight - MARGIN * 2,
+    SCREEN_WIDTH  = window.innerWidth,
+    SCREEN_WIDTH_HALF = SCREEN_WIDTH  / 2,
+    SCREEN_HEIGHT_HALF = SCREEN_HEIGHT / 2;
+
 var Boid = function() {
 
 	var vector = new THREE.Vector3(),
-	_acceleration, _width = 500, _height = 500, _depth = 200, _goal, _neighborhoodRadius = 100,
-	_maxSpeed = 4, _maxSteerForce = 0.1, _avoidWalls = false;
+	_acceleration, _width = 500, _height = 500, _depth = 200, _goal, _neighborhoodRadius = 200,
+	_maxSpeed = 8, _maxSteerForce = 0.1, _avoidWalls = false;
 
 	this.position = new THREE.Vector3();
 	this.velocity = new THREE.Vector3();
@@ -24,7 +30,7 @@ var Boid = function() {
 
 	this.setWorldSize = function ( width, height, depth ) { 
     _width = width;
-    _height = height;vector
+    _height = height;
     _depth = depth;
    }
 	    
@@ -308,13 +314,13 @@ function initBoids() {
 		boid.position.x = Math.random() * 400 - 200;
 		boid.position.y = Math.random() * 400 - 200;
 		boid.position.z = Math.random() * 400 - 200;
-		boid.velocity.x = Math.random() * 2 - 1;
-		boid.velocity.y = Math.random() * 2 - 1;
-		boid.velocity.z = Math.random() * 2 - 1;
+		boid.velocity.x = Math.random() * 10 - 1;
+		boid.velocity.y = Math.random() * 10 - 1;
+		boid.velocity.z = Math.random() * 10 - 1;
 		boid.setAvoidWalls( true );
-		boid.setWorldSize( 500, 500, 400 );
+		boid.setWorldSize( 1000, 1000, 1000 );
 
-		bird = birds[ i ] = new THREE.Mesh( new THREE.CubeGeometry( 200, 200, 200 ), new THREE.MeshBasicMaterial( { color:Math.random() * 0xffffff } ) );
+		bird = birds[ i ] = new THREE.Mesh( new THREE.CubeGeometry( 20, 20, 20 ), new THREE.MeshBasicMaterial( { color:Math.random() * 0xff0000 } ) );
 		bird.phase = Math.floor( Math.random() * 62.83 );
 		bird.position = boids[ i ].position;
 		bird.doubleSided = true;
@@ -340,9 +346,9 @@ function initBoids() {
 
 }
 
-function onDocumentMouseMove( event ) {
+function onCameraMove( camera ) {
 
-	var vector = new THREE.Vector3( event.clientX - SCREEN_WIDTH_HALF, - event.clientY + SCREEN_HEIGHT_HALF, 0 );
+	var vector = new THREE.Vector3( camera.position.x - SCREEN_WIDTH_HALF, - camera.position.y + SCREEN_HEIGHT_HALF, 0 );
 
 	for ( var i = 0, il = boids.length; i < il; i++ ) {
 

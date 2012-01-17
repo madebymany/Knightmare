@@ -2,20 +2,22 @@ var radius = 6371;
 var tilt = 0.41;
 var rotationSpeed = 0.02;
 
-var MARGIN = 0;
-var SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
-var SCREEN_WIDTH  = window.innerWidth;
-
 var container, stats;
 var camera, controls, scene, renderer;
 var geometry, mesh;
 var dirLight, pointLight, ambientLight;
 var lastUpdate = new Date().getTime();
 
-var delta, d, dPlanet, dMoon, dMoonVec = new THREE.Vector3();
+var delta, d;
 
 init();
 initBoids();
+
+var socket = io.connect('http://192.168.228.86');
+socket.on('changeOrientation', function (msg) {
+  //lon -= msg.ay;
+  //lat += msg.ax;
+});
 
 animate();
 
@@ -28,20 +30,26 @@ function init() {
 	camera.position.z = radius * 5;
 
 	controls = new THREE.FlyControls( camera );
+	
+	console.log(camera, controls)
 
 	controls.movementSpeed = 1000;
 	controls.domElement = container;
 	controls.rollSpeed = Math.PI / 24;
-	controls.autoForward = false;
-	controls.dragToLook = false
+	//controls.autoForward = false;
+	//controls.dragToLook = false
+	
+	//controls.movementSpeed = 100;
+	controls.lookSpeed = 3;
+	//controls.constrainVertical = [ -0.5, 0.5 ];
 
 
 	scene = new THREE.Scene();
 	scene.fog = new THREE.FogExp2( 0x000000, 0.00000025 );
 
-	dirLight = new THREE.DirectionalLight( 0xffffff );
-	dirLight.position.set( -1, 0, 1 ).normalize();
-	scene.add( dirLight );
+	pointLight = new THREE.PointLight( 0xffffff );
+	pointLight.position.set( -1, 0, 1 ).normalize();
+	scene.add( pointLight );
 
 	ambientLight = new THREE.AmbientLight( 0x000000 );
 	scene.add( ambientLight );
@@ -70,8 +78,6 @@ function init() {
 		fog: true
 
 	};
-	
-	addFighter();
 
 	var materialNormalMap = new THREE.ShaderMaterial( parameters );
 
@@ -155,19 +161,6 @@ function init() {
 
 };
 
-function addFighter() {
-  var geometry = new THREE.CubeGeometry( 200, 200, 200 ),
-      material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: true } );
-
-  mesh = new THREE.Mesh( geometry, material );
-  
-  mesh.position.x = 489.86611857857986;
-  mesh.position.y = 16.577589194263247;
-  mesh.position.z = 98.77433576219552;
-  
-  scene.add( mesh );
-};
-
 function makeClickRay(x,y,z) {
   
   var vector = new THREE.Vector3( x, y, z );
@@ -203,6 +196,7 @@ function animate() {
 
 	requestAnimationFrame( animate );
   
+  onCameraMove(camera);
   renderBoids();
 	render();
 	
@@ -221,10 +215,20 @@ function render() {
   // 
   delta = this.getFrametime();
 
-	controls.movementSpeed = 0.33; //* d;
+	controls.movementSpeed =  camera.position.length();
 	controls.update();
+	
+/*	lat = Math.max( - 85, Math.min( 85, lat ) );
+	phi = ( 90 - lat ) * Math.PI / 180;
+	theta = lon * Math.PI / 180;
 
-	renderer.clear();
+	camera.target.position.x = 500 * Math.sin( phi ) * Math.cos( theta );
+	camera.target.position.y = 500 * Math.cos( phi );
+	camera.target.position.z = 500 * Math.sin( phi ) * Math.sin( theta );*/
+	
+	renderer.render( scene, camera );
+
+	//renderer.clear();
 	composer.render( delta );
 
 };
