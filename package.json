@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "2.3.11",
-    "ejs": ">= 0.0.1"
+    "express": "",
+    "ejs": ">= 0.0.1",
+		"socket.io":""
   },
   "devDependencies": {},
   "engines": {
